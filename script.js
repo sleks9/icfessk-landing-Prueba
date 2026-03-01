@@ -131,7 +131,7 @@
     if (copyLinkBtn) {
       const url = window.location.href;
       const ok = await copyText(url, "Copia el enlace:");
-      if (ok) showToast("Enlace copiado \u2713", "cyan");
+      if (ok) showToast("Enlace copiado", "cyan");
       return;
     }
 
