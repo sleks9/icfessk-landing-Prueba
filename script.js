@@ -80,10 +80,15 @@
   const isTikTokInApp = () => {
     const ua = navigator.userAgent || "";
     const ref = document.referrer || "";
-    return (
-      /tiktok|musical\.ly|bytedance/i.test(ua) ||
-      /tiktok\.com/i.test(ref)
-    );
+
+    // TikTok UA contiene alguna de estas cadenas según versión/plataforma
+    const uaMatch = /tiktok|musical[._]ly|bytedance|BytedanceWebview|tt_webview/i.test(ua);
+    const refMatch = /tiktok\.com/i.test(ref);
+
+    // Parámetro de debug: añade ?tiktok=1 a la URL para probar sin TikTok
+    const debugParam = new URLSearchParams(window.location.search).get("tiktok") === "1";
+
+    return uaMatch || refMatch || debugParam;
   };
 
   const gateEl = document.getElementById("inAppGate");
