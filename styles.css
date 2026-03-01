@@ -560,6 +560,22 @@ body::after{
   opacity: 1;
   visibility: visible;
 }
+
+/* Variante cian para "Enlace copiado" del gate */
+.global-toast.toast-cyan{
+  background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(94,26,230,0.18));
+  border-color: rgba(0,212,255,0.35);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35), 0 0 20px rgba(0,212,255,0.15);
+  color: #fff;
+}
+.global-toast.toast-cyan .toast-text{
+  background: linear-gradient(90deg, #00D4FF, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-size: 15px;
+}
+
 .toast-text{ display:inline-block; }
 
 .site-footer{

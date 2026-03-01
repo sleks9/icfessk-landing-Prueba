@@ -1,5 +1,4 @@
 // JS mínimo: scroll suave + copiar número + gate para TikTok in-app browser
-// (sin emojis en strings)
 
 (() => {
   const prefersReduced =
@@ -13,18 +12,23 @@
     window.scrollTo({ top, behavior: prefersReduced ? "auto" : "smooth" });
   };
 
-  const showToast = (msg) => {
-      const toast = document.getElementById("globalToast");
-      if (!toast) return;
-      const textEl = toast.querySelector(".toast-text");
-      if (textEl) textEl.textContent = msg;
-      else toast.textContent = msg;
-      toast.classList.add("is-open");
-      window.clearTimeout(toast.__t);
-      toast.__t = window.setTimeout(() => {
-        toast.classList.remove("is-open");
-      }, 1600);
-    };
+  const showToast = (msg, variant = "default") => {
+    const toast = document.getElementById("globalToast");
+    if (!toast) return;
+    const textEl = toast.querySelector(".toast-text");
+    if (textEl) textEl.textContent = msg;
+    else toast.textContent = msg;
+
+    toast.classList.remove("toast-cyan");
+    if (variant === "cyan") toast.classList.add("toast-cyan");
+
+    toast.classList.add("is-open");
+    window.clearTimeout(toast.__t);
+    toast.__t = window.setTimeout(() => {
+      toast.classList.remove("is-open");
+      toast.classList.remove("toast-cyan");
+    }, 2200);
+  };
 
   const setupLogoFallback = () => {
     const img = document.querySelector(".logo");
@@ -56,9 +60,6 @@
     }
   };
 
-  // -------------------------
-  // Sticky height -> CSS var (--sticky-h)
-  // -------------------------
   const syncStickyHeight = () => {
     const sticky = document.querySelector(".sticky-cta");
     if (!sticky) return;
@@ -74,20 +75,12 @@
   window.addEventListener("resize", syncStickyHeight, { passive: true });
   window.addEventListener("orientationchange", syncStickyHeight, { passive: true });
 
-  // -------------------------
-  // Detección TikTok in-app browser
-  // -------------------------
   const isTikTokInApp = () => {
     const ua = navigator.userAgent || "";
     const ref = document.referrer || "";
-
-    // TikTok UA contiene alguna de estas cadenas según versión/plataforma
     const uaMatch = /tiktok|musical[._]ly|bytedance|BytedanceWebview|tt_webview/i.test(ua);
     const refMatch = /tiktok\.com/i.test(ref);
-
-    // Parámetro de debug: añade ?tiktok=1 a la URL para probar sin TikTok
     const debugParam = new URLSearchParams(window.location.search).get("tiktok") === "1";
-
     return uaMatch || refMatch || debugParam;
   };
 
@@ -107,19 +100,11 @@
     document.body.classList.remove("gate-open");
   };
 
-  // -------------------------
-  // AUTO-ABRIR GATE si viene de TikTok
-  // -------------------------
   if (isTikTokInApp()) {
-    // Pequeño delay para que el DOM esté pintado y se vea la animación
     requestAnimationFrame(() => openGate());
   }
 
-  // -------------------------
-  // Un solo listener global (click delegation)
-  // -------------------------
   document.addEventListener("click", async (e) => {
-    // 0) Si se hace click en un link a WhatsApp dentro de TikTok -> gate
     const waLink = e.target.closest('a[href*="wa.me/"]');
     if (waLink && isTikTokInApp() && gateEl) {
       e.preventDefault();
@@ -127,7 +112,6 @@
       return;
     }
 
-    // 1) Scroll suave
     const scrollBtn = e.target.closest("[data-scroll-to]");
     if (scrollBtn) {
       const sel = scrollBtn.getAttribute("data-scroll-to");
@@ -135,7 +119,6 @@
       return;
     }
 
-    // 2) Copiar número
     const copyNumberBtn = e.target.closest("[data-copy-number]");
     if (copyNumberBtn) {
       const number = "+57 3137478899";
@@ -144,16 +127,14 @@
       return;
     }
 
-    // 3) Gate: copiar enlace de la landing
     const copyLinkBtn = e.target.closest("[data-copy-link]");
     if (copyLinkBtn) {
       const url = window.location.href;
       const ok = await copyText(url, "Copia el enlace:");
-      if (ok) showToast("Enlace copiado");
+      if (ok) showToast("Enlace copiado \u2713", "cyan");
       return;
     }
 
-    // 4) Gate: cerrar (botón o backdrop)
     const closeBtn = e.target.closest("[data-close-gate]");
     if (closeBtn) {
       closeGate();
