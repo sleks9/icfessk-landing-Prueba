@@ -535,7 +535,7 @@ body::after{
   left: 50%;
   transform: translateX(-50%);
   bottom: calc(var(--sticky-h) + 16px + env(safe-area-inset-bottom));
-  z-index: 120;
+  z-index: 3000;
   padding: 10px 12px;
   border-radius: 14px;
   background: rgba(249,255,0,0.14);
@@ -561,7 +561,9 @@ body::after{
   visibility: visible;
 }
 
-/* Variante cian para "Enlace copiado" del gate */
+body.gate-open .global-toast{
+  bottom: 40px;
+}
 .global-toast.toast-cyan{
   background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(94,26,230,0.18));
   border-color: rgba(0,212,255,0.35);
